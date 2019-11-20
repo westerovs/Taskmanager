@@ -1,8 +1,9 @@
+"use strict";
 const TASK_COUNT = 3;
 
 // ----------------- Шаблоны -------------------------------------
 
-//кнопки меню
+//  кнопки меню
 const createHeaderBtnWrapTemplate = () => {
   return (`
     <section class="control__btn-wrap">
@@ -36,7 +37,7 @@ const createHeaderBtnWrapTemplate = () => {
   `);
 };
 
-//кнопки фильтры
+//  кнопки фильтры
 const createHeaderMainFilterTemplate = () => {
   return (`
     <section class="main__filter filter container">
@@ -112,7 +113,7 @@ const createHeaderMainFilterTemplate = () => {
 
 // Список задач - доска
 const createBoardTemplate = () => {
-  return(`
+  return (`
     <section class="board container" style="outline: 2px dashed gold;">
       <div class="board__filter-list">
         <a href="#" class="board__filter">SORT BY DEFAULT</a>
@@ -462,49 +463,40 @@ const createTaskEditTemplate = () => {
 
 // кнопка LoadMore
 const createLoadMoreTemplate = () => {
-  return(`
+  return (`
     <button class="load-more" type="button">load more</button>
   `);
 };
 
 
-
-
-
-//---------------------- ф-ция рендер --------------------------------
+//  ---------------------- ф-ция рендер --------------------------------
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
 
-
-
-
-//----------------------- parents -----------------------------------
-const siteMainElement = document.querySelector('.main');
-const siteHeaderElement = document.querySelector('.main__control');
-
-
-
+//  ----------------------- parents -----------------------------------
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = document.querySelector(`.main__control`);
 
 
 // --------------------- рендер на страницу --------------------------
 //         родитель               шаблон                        где
-render(siteHeaderElement, createHeaderBtnWrapTemplate(),    `beforeend`);
-render(siteMainElement,   createHeaderMainFilterTemplate(), `beforeend`);
-render(siteMainElement,   createBoardTemplate(),            `beforeend`);
+render(siteHeaderElement, createHeaderBtnWrapTemplate(), `beforeend`);
+render(siteMainElement, createHeaderMainFilterTemplate(), `beforeend`);
+render(siteMainElement, createBoardTemplate(), `beforeend`);
 
 // карточка редактирование
-const taskListElement = siteMainElement.querySelector('.board__tasks');
-render(taskListElement,   createTaskEditTemplate(),         `beforeend`);
+const taskListElement = siteMainElement.querySelector(`.board__tasks`);
+render(taskListElement, createTaskEditTemplate(), `beforeend`);
 
 // счетчик на 3 карточки
-new Array (TASK_COUNT)
-  .fill (``)
-  .forEach (
-    () => render(taskListElement, createTaskTemplate(), `beforeend`)
+new Array(TASK_COUNT)
+  .fill(``)
+  .forEach(
+      () => render(taskListElement, createTaskTemplate(), `beforeend`)
   );
 
 // кнопка LoadMore
-const boardElement = siteMainElement.querySelector('.board');
-render(boardElement,   createLoadMoreTemplate(), `beforeend`);
+const boardElement = siteMainElement.querySelector(`.board`);
+render(boardElement, createLoadMoreTemplate(), `beforeend`);
