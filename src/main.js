@@ -477,7 +477,6 @@ const siteHeaderElement = document.querySelector(`.main__control`);
 render(siteHeaderElement, createHeaderBtnWrapTemplate());
 render(siteMainElement, createHeaderMainFilterTemplate());
 render(siteMainElement, createBoardTemplate());
-render(siteMainElement, createBoardTemplate());
 
 // карточка редактирование
 const taskListElement = siteMainElement.querySelector(`.board__tasks`);
