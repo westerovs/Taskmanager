@@ -4,6 +4,9 @@ import {createHeaderMainFilterTemplate} from './components/filter.js';
 import {createHeaderBtnWrapTemplate} from './components/site-menu.js';
 import {createTaskTemplate} from './components/task-edit.js';
 import {createTaskEditTemplate} from './components/form-task-edit.js';
+//  ------------------- CТРУКТУРА ДАННЫХ ------------------------------
+import {generateTasks} from './mock/task.js';
+import {generateFilters} from './mock/filter-mock.js';
 
 
 const TASK_COUNT = 3;
@@ -23,8 +26,9 @@ const siteHeaderElement = document.querySelector(`.main__control`);
 
 
 // --------------------- рендер на страницу --------------------------
+const filters = generateFilters();
+render(siteMainElement, createHeaderMainFilterTemplate(filters));
 render(siteHeaderElement, createHeaderBtnWrapTemplate());
-render(siteMainElement, createHeaderMainFilterTemplate());
 render(siteMainElement, createBoardTemplate());
 
 
