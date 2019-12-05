@@ -1,18 +1,25 @@
+// раздел taskmanager
+import {createBtnHeaderTemplate} from './components/site-menu.js';
+// фильтры
+import {createFilterTemplate} from './components/filter.js';
+// главная доска
 import {createBoardTemplate} from './components/board.js';
-import {createLoadMoreTemplate} from './components/load-more-button.js';
-import {createHeaderMainFilterTemplate} from './components/filter.js';
-import {createHeaderBtnWrapTemplate} from './components/site-menu.js';
-import {createTaskTemplate} from './components/task-edit.js';
-import {createTaskEditTemplate} from './components/form-task-edit.js';
-//  ------------------- CТРУКТУРА ДАННЫХ ------------------------------
-import {generateTasks} from './mock/task.js';
+// карточки заданий
+import {createCardTaskTemplate} from './components/card-task.js';
+// форма карточки
+import {createCardFormTemplate} from './components/card-form.js';
+// кнопка LoadMore
+import {createBtnLoadMoreTemplate} from './components/btn-load-more.js';
+
+//  ---------------------------- моки
 import {generateFilters} from './mock/filter-mock.js';
+// import {generateTasks} from './mock/task.js';
 
 
 const TASK_COUNT = 3;
 
 
-//  ---------------------- ф-ция рендер --------------------------------
+//  ---------------------------- ф-ция рендер
 const render = (container, template, place = `beforeend`) => {
   if (container instanceof Element) {
     container.insertAdjacentHTML(place, template);
@@ -20,27 +27,27 @@ const render = (container, template, place = `beforeend`) => {
 };
 
 
-//  ----------------------- containers -----------------------------------
+//  ---------------------------- containers in HTML
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.main__control`);
 
 
-// --------------------- рендер на страницу --------------------------
-const filters = generateFilters();
-render(siteMainElement, createHeaderMainFilterTemplate(filters));
-render(siteHeaderElement, createHeaderBtnWrapTemplate());
-render(siteMainElement, createBoardTemplate());
+// ---------------------------- рендер на страницу
+const filtersBtn = generateFilters(); // моки фильтр
+render(siteMainElement, createFilterTemplate(filtersBtn));
+render(siteHeaderElement, createBtnHeaderTemplate());
+render(siteMainElement, createBoardTemplate()); // доска
 
 
 // карточка редактирование
 const taskListElement = siteMainElement.querySelector(`.board__tasks`);
-render(taskListElement, createTaskEditTemplate());
+render(taskListElement, createCardFormTemplate());
 
 
 // счетчик на 3 карточки
-new Array(TASK_COUNT).fill(``).forEach(() => render(taskListElement, createTaskTemplate()));
+new Array(TASK_COUNT).fill(``).forEach(() => render(taskListElement, createCardTaskTemplate()));
 
 
-// кнопка LoadMore
+// кнопка LoadMore и доска
 const boardElement = siteMainElement.querySelector(`.board`);
-render(boardElement, createLoadMoreTemplate());
+render(boardElement, createBtnLoadMoreTemplate()); // кнопка LoadMore
