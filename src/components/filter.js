@@ -17,11 +17,11 @@ const createFilterMarkup = (filter, isChecked) => {
 };
 
 
-//  массив фильтров
+//  передаю массив фильтров из моков
 export const createFilterTemplate = (filters) => {
   const filtersMarkup = filters.map((item, i) => createFilterMarkup(item, i === 0)).join(` `);
   return (
-    // вставляется мок фильтр
+    // вставляется генерируемая разметка
     `<section class="main__filter filter container">
       ${filtersMarkup}
     </section>`

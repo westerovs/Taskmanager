@@ -1,6 +1,3 @@
-// ***** МОК ФИЛЬТРОВ *****
-
-
 // имена фильтров
 const filterNames = [
   `all`, `overdue`, `today`, `favorites`, `repeating`, `tags`, `archive`
@@ -8,7 +5,7 @@ const filterNames = [
 
 
 // функция которая на основе имён фильтров будет создавать нужную структуру, которую передаю в шаблон
-// из функции generateFilters я копирую(map) и возвращаю массив объектов
+// из функции generateFilters я  возвращаю массив объектов
 const generateFilters = () => {
   return filterNames.map((item) => {
     return {
