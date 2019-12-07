@@ -1,4 +1,4 @@
 // кнопка LoadMore
-export const createLoadMoreTemplate = () => (
+export const createBtnLoadMoreTemplate = () => (
   `<button class="load-more" type="button">load more</button>`
 );

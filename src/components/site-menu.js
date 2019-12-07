@@ -1,5 +1,5 @@
 //  кнопки меню
-export const createHeaderBtnWrapTemplate = () => (
+export const createBtnHeaderTemplate = () => (
   `<section class="control__btn-wrap">
     <input
       type="radio"

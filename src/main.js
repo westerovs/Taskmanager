@@ -1,15 +1,18 @@
+import {createBtnHeaderTemplate} from './components/site-menu.js';
+import {createFilterTemplate} from './components/filter.js';
 import {createBoardTemplate} from './components/board.js';
-import {createLoadMoreTemplate} from './components/load-more-button.js';
-import {createHeaderMainFilterTemplate} from './components/filter.js';
-import {createHeaderBtnWrapTemplate} from './components/site-menu.js';
-import {createTaskTemplate} from './components/task-edit.js';
-import {createTaskEditTemplate} from './components/form-task-edit.js';
+import {createCardTaskTemplate} from './components/card-task.js';
+import {createCardFormTemplate} from './components/card-form.js';
+import {createBtnLoadMoreTemplate} from './components/btn-load-more.js';
+import {generateFilters} from './mock/filter-mock.js';
+import {generateTasks} from './mock/task.js';
 
 
-const TASK_COUNT = 3;
+const TASK_COUNT = 30;
+const SHOWING_TASKS_COUNT_ON_START = 8;
+const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
-
-//  ---------------------- ф-ция рендер --------------------------------
+//  ---------------------------- ф-ция рендер
 const render = (container, template, place = `beforeend`) => {
   if (container instanceof Element) {
     container.insertAdjacentHTML(place, template);
@@ -17,26 +20,38 @@ const render = (container, template, place = `beforeend`) => {
 };
 
 
-//  ----------------------- containers -----------------------------------
+//  ---------------------------- containers in HTML
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = document.querySelector(`.main__control`);
 
+render(siteHeaderElement, createBtnHeaderTemplate());
 
-// --------------------- рендер на страницу --------------------------
-render(siteHeaderElement, createHeaderBtnWrapTemplate());
-render(siteMainElement, createHeaderMainFilterTemplate());
-render(siteMainElement, createBoardTemplate());
+const filtersBtn = generateFilters();
+render(siteMainElement, createFilterTemplate(filtersBtn));
+render(siteMainElement, createBoardTemplate()); // доска
 
-
-// карточка редактирование
 const taskListElement = siteMainElement.querySelector(`.board__tasks`);
-render(taskListElement, createTaskEditTemplate());
+const tasks = generateTasks(TASK_COUNT); // карточки
 
+render(taskListElement, createCardFormTemplate(tasks[0])); // форма
+let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
 
-// счетчик на 3 карточки
-new Array(TASK_COUNT).fill(``).forEach(() => render(taskListElement, createTaskTemplate()));
+tasks.slice(1, showingTasksCount).forEach((task) => render(taskListElement, createCardTaskTemplate(task)));
 
 
 // кнопка LoadMore
 const boardElement = siteMainElement.querySelector(`.board`);
-render(boardElement, createLoadMoreTemplate());
+render(boardElement, createBtnLoadMoreTemplate());
+const loadMoreButton = boardElement.querySelector(`.load-more`);
+
+loadMoreButton.addEventListener(`click`, () => {
+  const prevTasksCount = showingTasksCount;
+  showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
+
+  tasks.slice(prevTasksCount, showingTasksCount)
+    .forEach((task) => render(taskListElement, createCardTaskTemplate(task), `beforeend`));
+
+  if (showingTasksCount >= tasks.length) {
+    loadMoreButton.remove();
+  }
+});
