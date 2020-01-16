@@ -6,18 +6,11 @@ import {createCardFormTemplate} from './components/card-form.js';
 import {createBtnLoadMoreTemplate} from './components/btn-load-more.js';
 import {generateFilters} from './mock/filter-mock.js';
 import {generateTasks} from './mock/task.js';
-
+import {render, RenderPosition} from './utils.js';
 
 const TASK_COUNT = 30;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
-
-//  ---------------------------- ф-ция рендер
-const render = (container, template, place = `beforeend`) => {
-  if (container instanceof Element) {
-    container.insertAdjacentHTML(place, template);
-  }
-};
 
 
 //  ---------------------------- containers in HTML
