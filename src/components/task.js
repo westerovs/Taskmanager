@@ -1,8 +1,6 @@
-// карточки задач
-
-import {MonthNames} from '../const.js';
-import {formatTime} from '../utils.js';
-
+import AbstractComponent from './abstract-component.js';
+import {MONTH_NAMES} from '../const.js';
+import {formatTime} from '../utils/common.js';
 
 const createHashtagsMarkup = (hashtags) => {
   return hashtags
@@ -18,22 +16,20 @@ const createHashtagsMarkup = (hashtags) => {
     .join(`\n`);
 };
 
-
-export const createCardTaskTemplate = (task) => {
-
+const createTaskTemplate = (task) => {
+  // Подсказка:
+  // Все работу производим заранее. Внутри шаблонной строки никаких вычислений не делаем,
+  // потому что внутри большой разметки сложно искать какой-либо код.
   const {description, tags, dueDate, color, repeatingDays} = task;
-  // просрочено/непросроченно
+
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
-  // показывать дату - не показывать
   const isDateShowing = !!dueDate;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${MonthNames[dueDate.getMonth()]}` : ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const hashtags = createHashtagsMarkup(Array.from(tags));
-  // класс для повторения
   const repeatClass = Object.values(repeatingDays).some(Boolean) ? `card--repeat` : ``;
-  // класс для просроченной карточки
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
   return (
@@ -88,3 +84,20 @@ export const createCardTaskTemplate = (task) => {
     </article>`
   );
 };
+
+export default class Task extends AbstractComponent {
+  constructor(task) {
+    super();
+
+    this._task = task;
+  }
+
+  getTemplate() {
+    return createTaskTemplate(this._task);
+  }
+
+  setEditButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--edit`)
+      .addEventListener(`click`, handler);
+  }
+}

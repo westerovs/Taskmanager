@@ -1,51 +1,26 @@
-import {createBtnHeaderTemplate} from './components/site-menu.js';
-import {createFilterTemplate} from './components/filter.js';
-import {createBoardTemplate} from './components/board.js';
-import {createCardTaskTemplate} from './components/card-task.js';
-import {createCardFormTemplate} from './components/card-form.js';
-import {createBtnLoadMoreTemplate} from './components/btn-load-more.js';
-import {generateFilters} from './mock/filter-mock.js';
+import BoardComponent from './components/board.js';
+import BoardController from './controllers/board.js';
+import FilterComponent from './components/filter.js';
+import SiteMenuComponent from './components/site-menu.js';
 import {generateTasks} from './mock/task.js';
-import {render, RenderPosition} from './utils.js';
+import {generateFilters} from './mock/filter.js';
+import {render, RenderPosition} from './utils/render.js';
 
+const TASK_COUNT = 22;
 
-const TASK_COUNT = 30;
-const SHOWING_TASKS_COUNT_ON_START = 8;
-const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
-
-
-//  ---------------------------- containers in HTML
 const siteMainElement = document.querySelector(`.main`);
-const siteHeaderElement = document.querySelector(`.main__control`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-render(siteHeaderElement, createBtnHeaderTemplate());
+render(siteHeaderElement, new SiteMenuComponent(), RenderPosition.BEFOREEND);
 
-const filtersBtn = generateFilters();
-render(siteMainElement, createFilterTemplate(filtersBtn));
-render(siteMainElement, createBoardTemplate()); // доска
+const filters = generateFilters();
+render(siteMainElement, new FilterComponent(filters), RenderPosition.BEFOREEND);
 
-const taskListElement = siteMainElement.querySelector(`.board__tasks`);
-const tasks = generateTasks(TASK_COUNT); // карточки
+const boardComponent = new BoardComponent();
+render(siteMainElement, boardComponent, RenderPosition.BEFOREEND);
 
-render(taskListElement, createCardFormTemplate(tasks[0])); // форма
-let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
+const tasks = generateTasks(TASK_COUNT);
 
-tasks.slice(1, showingTasksCount).forEach((task) => render(taskListElement, createCardTaskTemplate(task)));
+const boardController = new BoardController(boardComponent);
 
-
-// кнопка LoadMore
-const boardElement = siteMainElement.querySelector(`.board`);
-render(boardElement, createBtnLoadMoreTemplate());
-const loadMoreButton = boardElement.querySelector(`.load-more`);
-
-loadMoreButton.addEventListener(`click`, () => {
-  const prevTasksCount = showingTasksCount;
-  showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
-
-  tasks.slice(prevTasksCount, showingTasksCount)
-    .forEach((task) => render(taskListElement, createCardTaskTemplate(task), `beforeend`));
-
-  if (showingTasksCount >= tasks.length) {
-    loadMoreButton.remove();
-  }
-});
+boardController.render(tasks);
