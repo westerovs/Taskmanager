@@ -1,6 +1,6 @@
-
-import {Colors, Days, MonthNames} from '../const.js';
-import {formatTime} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
+import {COLORS, DAYS, MONTH_NAMES} from '../const.js';
+import {formatTime} from '../utils/common.js';
 
 const createColorsMarkup = (colors, currentColor) => {
   return colors
@@ -71,13 +71,13 @@ const createHashtags = (tags) => {
     .join(`\n`);
 };
 
-export const createCardFormTemplate = (task) => {
+const createTaskEditTemplate = (task) => {
   const {description, tags, dueDate, color, repeatingDays} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
   const isDateShowing = !!dueDate;
 
-  const date = isDateShowing ? `${dueDate.getDate()} ${MonthNames[dueDate.getMonth()]}` : ``;
+  const date = isDateShowing ? `${dueDate.getDate()} ${MONTH_NAMES[dueDate.getMonth()]}` : ``;
   const time = isDateShowing ? formatTime(dueDate) : ``;
 
   const isRepeatingTask = Object.values(repeatingDays).some(Boolean);
@@ -85,8 +85,8 @@ export const createCardFormTemplate = (task) => {
   const deadlineClass = isExpired ? `card--deadline` : ``;
 
   const tagsMarkup = createHashtags(tags);
-  const colorsMarkup = createColorsMarkup(Colors, color);
-  const repeatingDaysMarkup = createRepeatingDaysMarkup(Days, repeatingDays);
+  const colorsMarkup = createColorsMarkup(COLORS, color);
+  const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, repeatingDays);
 
   return (
     `<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
@@ -97,7 +97,7 @@ export const createCardFormTemplate = (task) => {
                 <use xlink:href="#wave"></use>
               </svg>
             </div>
-
+  
             <div class="card__textarea-wrap">
               <label>
                 <textarea
@@ -107,44 +107,50 @@ export const createCardFormTemplate = (task) => {
                 >${description}</textarea>
               </label>
             </div>
-
+  
             <div class="card__settings">
               <div class="card__details">
                 <div class="card__dates">
                   <button class="card__date-deadline-toggle" type="button">
                     date: <span class="card__date-status">${isDateShowing ? `yes` : `no`}</span>
                   </button>
-
-                  ${isDateShowing ? `
-                    <fieldset class="card__date-deadline">
-                      <label class="card__input-deadline-wrap">
-                        <input
-                          class="card__date"
-                          type="text"
-                          placeholder=""
-                          name="date"
-                          value="${date} ${time}"
-                        />
-                      </label>
-                    </fieldset>` : ``}
-
+  
+                  ${
+    isDateShowing ?
+      `<fieldset class="card__date-deadline">
+                        <label class="card__input-deadline-wrap">
+                          <input
+                            class="card__date"
+                            type="text"
+                            placeholder=""
+                            name="date"
+                            value="${date} ${time}"
+                          />
+                        </label>
+                      </fieldset>`
+      : ``
+    }
+  
                   <button class="card__repeat-toggle" type="button">
                     repeat:<span class="card__repeat-status">${isRepeatingTask ? `yes` : `no`}</span>
                   </button>
-
-                  ${isRepeatingTask ? `
-                    <fieldset class="card__repeat-days">
+  
+                  ${
+    isRepeatingTask ?
+      `<fieldset class="card__repeat-days">
                       <div class="card__repeat-days-inner">
                         ${repeatingDaysMarkup}
                       </div>
-                    </fieldset>` : ``}
+                    </fieldset>`
+      : ``
+    }
                 </div>
-
+  
                 <div class="card__hashtag">
                   <div class="card__hashtag-list">
                     ${tagsMarkup}
                   </div>
-
+  
                   <label>
                     <input
                       type="text"
@@ -155,7 +161,7 @@ export const createCardFormTemplate = (task) => {
                   </label>
                 </div>
               </div>
-
+  
               <div class="card__colors-inner">
                 <h3 class="card__colors-title">Color</h3>
                 <div class="card__colors-wrap">
@@ -163,7 +169,7 @@ export const createCardFormTemplate = (task) => {
                 </div>
               </div>
             </div>
-
+  
             <div class="card__status-btns">
               <button class="card__save" type="submit">save</button>
               <button class="card__delete" type="button">delete</button>
@@ -173,3 +179,20 @@ export const createCardFormTemplate = (task) => {
       </article>`
   );
 };
+
+export default class TaskEdit extends AbstractComponent {
+  constructor(task) {
+    super();
+
+    this._task = task;
+  }
+
+  getTemplate() {
+    return createTaskEditTemplate(this._task);
+  }
+
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`form`)
+      .addEventListener(`submit`, handler);
+  }
+}
